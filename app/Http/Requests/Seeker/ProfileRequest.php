@@ -5,6 +5,7 @@ namespace App\Http\Requests\Seeker;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
+use App\Models\City;
 
 class ProfileRequest extends FormRequest
 {
@@ -18,9 +19,9 @@ class ProfileRequest extends FormRequest
         return [
             'birthdate' => ['nullable', 'date', 'before_or_equal:-10 years', 'after_or_equal:-100 years'],
 
-            'region'   => ['nullable', Rule::in(array_keys(config('ph_locations')))],
-            'province' => ['nullable', 'string', 'max:80'],
-            'city'     => ['nullable', 'string', 'max:100'],
+            'region'   => ['nullable', Rule::exists('psgc_regions', 'code')],
+            'province' => ['nullable', Rule::exists('psgc_provinces', 'code')->where('region_code', $this->input('region'))],
+            'city'     => ['nullable', Rule::exists('psgc_cities', 'code')->where('region_code', $this->input('region'))],
 
             'year_level'  => ['nullable', Rule::in(['none', ...array_keys(config('napc.year_levels'))])],
             'school_type' => ['nullable', Rule::in(array_keys(config('napc.school_types')))],
@@ -50,17 +51,24 @@ class ProfileRequest extends FormRequest
         return [
             'birthdate.before_or_equal' => 'You must be at least 10 years old to use NAPC Connect.',
             'birthdate.after_or_equal'  => 'Please check your birthdate.',
+            'province.exists'    => 'That province is not in the selected region.',
+            'city.exists'        => 'That city is not in the selected region.',
         ];
     }
 
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
-            $region = $this->input('region');
+            // A city must belong to the chosen province. Independent cities have none and fit any province.
             $province = $this->input('province');
+            $city = $this->input('city');
 
-            if ($province && (! $region || ! in_array($province, config("ph_locations.{$region}.provinces", []), true))) {
-                $validator->errors()->add('province', 'That province is not in the selected region.');
+            if ($province && $city && ! $validator->errors()->hasAny(['province', 'city'])) {
+                $cityProvince = City::whereKey($city)->value('province_code');
+
+                if ($cityProvince !== null && $cityProvince !== $province) {
+                    $validator->errors()->add('city', 'That city is not in the selected province.');
+                }
             }
         });
     }

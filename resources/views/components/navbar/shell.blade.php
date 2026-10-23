@@ -6,7 +6,7 @@
     @keydown.escape.window="closeAll()">
     <div class="container-page flex items-center justify-between gap-4 py-4">
 
-        <a href="{{ route('home') }}" class="brand">
+        <a href="{{ auth()->check() ? route(auth()->user()->homeRoute()) : route('home') }}" class="brand">
             <span class="inline-block h-6 w-6 rounded-full bg-[var(--sun)]"></span>
             NAPC Connect
         </a>

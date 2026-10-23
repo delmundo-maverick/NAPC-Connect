@@ -1,4 +1,3 @@
-{{-- Shared by create and edit. Needs: $listing, $action, $method --}}
 @php
     // Questions: after a failed submit use what was typed, otherwise what is saved
     $questions = collect(old('questions', $listing->application_form ?? []))
@@ -17,13 +16,8 @@
     $config = [
         'type' => old('type', $listing->type ?? 'scholarship'),
         'applyMode' => old('apply_mode', $listing->apply_mode ?? 'info'),
-        'region' => old('region', $listing->region),
-        'province' => old('province', $listing->province),
         'details' => old('details', $listing->details ?? []),
         'targeting' => config('napc.targeting'),
-        'regions' => collect(config('ph_locations'))
-            ->map(fn($r) => ['name' => $r['name'], 'provinces' => $r['provinces']])
-            ->all(),
         'detailFields' => collect(config('napc.detail_fields'))
             ->map(fn($fields) => collect($fields)->map(fn($f, $key) => ['key' => $key] + $f)->values()->all())
             ->all(),
@@ -36,6 +30,7 @@
 <form method="POST" action="{{ $action }}" class="space-y-8" x-data="listingForm"
     data-config="{{ json_encode($config) }}">
     @csrf
+
     @if ($method !== 'POST')
         @method($method)
     @endif
@@ -85,30 +80,13 @@
         hint="Everything here is optional. Leave a field blank to keep it open to everyone. We match seekers using their profile, so the more you fill in, the better the suggestions.">
 
         {{-- Location --}}
-        <div x-show="shows('location')" x-cloak class="space-y-4">
-            <div class="grid gap-4 sm:grid-cols-2">
-                <div>
-                    <label for="region" class="label">Where is this available?</label>
-                    <select id="region" name="region" class="input" x-model="region" @change="regionChanged()">
-                        <option value="">Nationwide</option>
-                        @foreach (config('ph_locations') as $key => $r)
-                            <option value="{{ $key }}">{{ $r['name'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label for="province" class="label">Province</label>
-                    <select id="province" name="province" class="input" :disabled="!region"
-                        @change="province = $event.target.value">
-                        <option value="" :selected="province === ''">Whole region</option>
-                        <template x-for="name in provinces" :key="name">
-                            <option :value="name" :selected="name === province" x-text="name"></option>
-                        </template>
-                    </select>
-                </div>
-            </div>
-            <x-field name="city" label="City or municipality (optional)" :value="$listing->city"
-                hint="Pick a region first. Use this for LGU programs, like “Lipa City”." x-bind:disabled="!region" />
+        <div x-show="shows('location')" x-cloak class="space-y-2">
+            <x-location-picker :region="old('region', $listing->region)" :province="old('province', $listing->province)" :city="old('city', $listing->city)"
+                region-label="Where is this available?" region-placeholder="Nationwide" province-label="Province"
+                province-placeholder="Whole region" city-label="City or municipality"
+                city-placeholder="Any city or municipality" />
+            <p class="muted">Leave the region on Nationwide to open it to everyone. Pick a city for LGU programs, like
+                Lipa City.</p>
         </div>
 
         <div x-show="shows('year_levels')" x-cloak>

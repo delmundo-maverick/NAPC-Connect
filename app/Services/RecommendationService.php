@@ -6,6 +6,7 @@ use App\Models\Listing;
 use App\Models\SeekerProfile;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use App\Support\Locations;
 
 class RecommendationService
 {
@@ -58,7 +59,7 @@ class RecommendationService
                 }
 
                 $score += 1;
-                $locationReason = "Available in {$listing->province}";
+                $locationReason = 'Available in ' . (Locations::province($listing->province) ?: 'your province');
             }
 
             if ($listing->city && $profile->city) {
@@ -67,7 +68,7 @@ class RecommendationService
                 }
 
                 $score += 2;
-                $locationReason = "For residents of {$listing->city}";
+                $locationReason = 'For residents of ' . (Locations::city($listing->city) ?: 'your city');
             }
 
             $reasons[] = $locationReason;

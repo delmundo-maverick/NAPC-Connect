@@ -7,12 +7,7 @@
 
 @php
     $config = [
-        'region' => old('region', $profile->region),
-        'province' => old('province', $profile->province),
         'yearLevel' => old('year_level', $profile->year_level),
-        'regions' => collect(config('ph_locations'))
-            ->map(fn($r) => ['name' => $r['name'], 'provinces' => $r['provinces']])
-            ->all(),
     ];
 @endphp
 
@@ -57,30 +52,10 @@
                 </x-seeker.form-section>
 
                 {{-- 2. LOCATION --}}
-                <x-seeker.form-section number="2" title="Where you live">
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        <div>
-                            <label for="region" class="label">Region</label>
-                            <select id="region" name="region" class="input" x-model="region" @change="regionChanged()">
-                                <option value="">Choose a region</option>
-                                @foreach (config('ph_locations') as $key => $r)
-                                    <option value="{{ $key }}">{{ $r['name'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <label for="province" class="label">Province</label>
-                            <select id="province" name="province" class="input" :disabled="!region"
-                                @change="province = $event.target.value">
-                                <option value="" :selected="province === ''">Choose a province</option>
-                                <template x-for="name in provinces" :key="name">
-                                    <option :value="name" :selected="name === province" x-text="name"></option>
-                                </template>
-                            </select>
-                        </div>
-                    </div>
-                    <x-field name="city" label="City or municipality" :value="$profile->city" placeholder="e.g. Lipa City"
-                        hint="Pick a region first. Helps with LGU programs." x-bind:disabled="!region" />
+                <x-seeker.form-section number="2" title="Where you live"
+                    hint="We use this to show programs available where you live.">
+                    <x-location-picker :region="old('region', $profile->region)" :province="old('province', $profile->province)" :city="old('city', $profile->city)"
+                        city-label="City or municipality" />
                 </x-seeker.form-section>
 
                 {{-- 3. SCHOOL --}}

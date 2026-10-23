@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 // Shared
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocationController;
 
 // Auth
 use App\Http\Controllers\Auth\LoginController;
@@ -73,6 +74,12 @@ Route::middleware('auth')->group(function () {
     // Sends each role to its own home page
     Route::get('/dashboard', [HomeController::class, 'dashboard'])
         ->name('dashboard');
+
+    // Location dropdown data. Regions are on the page; provinces and cities load as needed.
+    Route::get('/locations/provinces', [LocationController::class, 'provinces'])
+        ->name('locations.provinces');
+    Route::get('/locations/cities', [LocationController::class, 'cities'])
+        ->name('locations.cities');
 
     // ---------------------------------------------------------------
     // Seeker

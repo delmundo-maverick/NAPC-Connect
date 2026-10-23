@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
+use App\Support\Locations;
 
 class Listing extends Model
 {
@@ -71,9 +72,10 @@ class Listing extends Model
             return 'Nationwide';
         }
 
-        $regionName = config("ph_locations.{$this->region}.name", $this->region);
-
-        return collect([$this->city, $this->province ?: $regionName])->filter()->implode(', ');
+        return collect([
+            Locations::city($this->city),
+            Locations::province($this->province) ?: Locations::region($this->region),
+        ])->filter()->implode(', ');
     }
 
     public function isExpired(): bool
