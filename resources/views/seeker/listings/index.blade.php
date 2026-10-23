@@ -26,11 +26,20 @@
                 <input type="hidden" name="type" value="{{ $type }}">
             @endif
 
+            {{-- Search and sort --}}
             <div class="browse-filter">
                 <div>
                     <label for="q" class="label">Search</label>
-                    <input id="q" type="search" name="q" value="{{ $search }}" class="input"
-                        placeholder="Title or keyword">
+                    <div class="relative">
+                        <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--navy)]"
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7" />
+                            <path d="m20 20-3.5-3.5" />
+                        </svg>
+                        <input id="q" type="search" name="q" value="{{ $search }}"
+                            class="input !bg-none !pl-12" placeholder="Title or keyword">
+                    </div>
                 </div>
 
                 <div>
@@ -40,21 +49,24 @@
                         <option value="deadline" @selected($sort === 'deadline')>Deadline soonest</option>
                     </select>
                 </div>
-
-                <div class="flex gap-2">
-                    <button type="submit" class="btn-primary">Search</button>
-                    @if ($hasFilters)
-                        <a href="{{ route('seeker.listings.index', $type !== 'all' ? ['type' => $type] : []) }}"
-                            class="btn-ghost border-2 border-[var(--navy)]">Clear</a>
-                    @endif
-                </div>
             </div>
 
+            {{-- Location --}}
             <x-location-picker :region="$region" :province="$province" :city="$city" :columns="3" region-label="Region"
                 region-placeholder="Anywhere in the Philippines" province-placeholder="Any province"
                 city-label="City or municipality" city-placeholder="Any city or municipality" />
+
+            {{-- Buttons --}}
+            <div class="filter-actions">
+                @if ($hasFilters)
+                    <a href="{{ route('seeker.listings.index', $type !== 'all' ? ['type' => $type] : []) }}"
+                        class="btn-ghost border-2 border-[var(--navy)]">Clear</a>
+                @endif
+                <button type="submit" class="btn-primary">Search</button>
+            </div>
         </form>
 
+        {{-- Result count --}}
         <p class="muted font-semibold">
             {{ $listings->total() }} {{ \Illuminate\Support\Str::plural('listing', $listings->total()) }}
             @if ($search !== '')
@@ -65,6 +77,7 @@
             @endif
         </p>
 
+        {{-- Results --}}
         <div class="grid gap-6 md:grid-cols-2">
             @forelse ($listings as $listing)
                 <x-seeker.listing-card :listing="$listing" />
