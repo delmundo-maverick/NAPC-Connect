@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Support\Locations;
 
 class SeekerProfile extends Model
 {
@@ -60,8 +61,10 @@ class SeekerProfile extends Model
     /** Label => value rows for an organization reading an application. */
     public function detailRows(bool $withIncome = false): array
     {
-        $regionName = $this->region ? config("ph_locations.{$this->region}.name", $this->region) : null;
-        $location = collect([$this->city, $this->province ?: $regionName])->filter()->implode(', ');
+        $location = collect([
+            Locations::city($this->city),
+            Locations::province($this->province) ?: Locations::region($this->region),
+        ])->filter()->implode(', ');
 
         $yearLevel = match (true) {
             $this->year_level === 'none' => 'Not currently in school',

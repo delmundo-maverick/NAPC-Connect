@@ -36,8 +36,8 @@
                 <label for="region" class="label">Location</label>
                 <select id="region" name="region" class="input">
                     <option value="">Anywhere in the Philippines</option>
-                    @foreach (config('ph_locations') as $key => $r)
-                        <option value="{{ $key }}" @selected($region === $key)>{{ $r['name'] }}</option>
+                    @foreach ($regions as $code => $name)
+                        <option value="{{ $code }}" @selected($region === $code)>{{ $name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -65,7 +65,7 @@
                 for “{{ $search }}”
             @endif
             @if ($region !== '')
-                in {{ config("ph_locations.{$region}.name") }} and nationwide
+                in {{ $regions[$region] }} and nationwide
             @endif
         </p>
 

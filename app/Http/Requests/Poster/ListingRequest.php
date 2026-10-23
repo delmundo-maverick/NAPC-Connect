@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
+use App\Models\City;
 
 class ListingRequest extends FormRequest
 {
@@ -26,9 +27,9 @@ class ListingRequest extends FormRequest
             'deadline'    => ['nullable', 'date', Rule::when($this->input('action') === 'publish', ['after_or_equal:today'])],
             'source_url'  => ['nullable', 'url:http,https', 'max:500'],
 
-            'region'   => ['nullable', Rule::in(array_keys(config('ph_locations')))],
-            'province' => ['nullable', 'string', 'max:80'],
-            'city'     => ['nullable', 'string', 'max:100'],
+            'region'   => ['nullable', Rule::exists('psgc_regions', 'code')],
+            'province' => ['nullable', Rule::exists('psgc_provinces', 'code')->where('region_code', $this->input('region'))],
+            'city'     => ['nullable', Rule::exists('psgc_cities', 'code')->where('region_code', $this->input('region'))],
 
             'year_levels'    => ['nullable', 'array'],
             'year_levels.*'  => [Rule::in(array_keys(config('napc.year_levels')))],
@@ -86,17 +87,24 @@ class ListingRequest extends FormRequest
         return [
             'questions.required' => 'Add at least one question, or choose a different way to apply.',
             'questions.min'      => 'Add at least one question, or choose a different way to apply.',
+            'province.exists'    => 'That province is not in the selected region.',
+            'city.exists'        => 'That city is not in the selected region.',
         ];
     }
 
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
-            $region = $this->input('region');
+            // A city must belong to the chosen province. Independent cities have none and fit any province.
             $province = $this->input('province');
+            $city = $this->input('city');
 
-            if ($province && (! $region || ! in_array($province, config("ph_locations.{$region}.provinces", []), true))) {
-                $validator->errors()->add('province', 'That province is not in the selected region.');
+            if ($province && $city && ! $validator->errors()->hasAny(['province', 'city'])) {
+                $cityProvince = City::whereKey($city)->value('province_code');
+
+                if ($cityProvince !== null && $cityProvince !== $province) {
+                    $validator->errors()->add('city', 'That city is not in the selected province.');
+                }
             }
 
             $min = $this->input('age_min');
@@ -126,7 +134,7 @@ class ListingRequest extends FormRequest
     {
         $data = $this->validated();
         $type = $data['type'];
-        $uses = fn (string $field): bool => in_array($field, config("napc.targeting.{$type}", []), true);
+        $uses = fn(string $field): bool => in_array($field, config("napc.targeting.{$type}", []), true);
         $hasRegion = $uses('location') && ! empty($data['region']);
 
         return [
@@ -161,7 +169,7 @@ class ListingRequest extends FormRequest
 
     private function cleanList(array $items): ?array
     {
-        $items = array_values(array_unique(array_filter(array_map(fn ($i) => trim((string) $i), $items))));
+        $items = array_values(array_unique(array_filter(array_map(fn($i) => trim((string) $i), $items))));
 
         return $items ?: null;
     }
@@ -205,7 +213,7 @@ class ListingRequest extends FormRequest
     private function parseOptions(?string $text): array
     {
         return collect(preg_split('/\R/', (string) $text))
-            ->map(fn ($line) => Str::limit(trim($line), 80, ''))
+            ->map(fn($line) => Str::limit(trim($line), 80, ''))
             ->filter()
             ->unique()
             ->take(12)

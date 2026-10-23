@@ -53,9 +53,9 @@
 
             {{-- Hero image with one sample match --}}
             <div class="rise rise-2 relative pb-10 sm:pb-12">
-                {{-- Replace with: <img src="{{ asset('images/hero.jpg') }}" alt="..." class="aspect-[4/3] w-full rounded-2xl object-cover"> --}}
-                <x-img-placeholder label="Hero photo: community members applying for a program"
-                    class="aspect-[4/3] w-full" />
+                <img src="{{ asset('images/hero-img.jpg') }}" alt="..."
+                    class="aspect-[4/3] w-full rounded-2xl object-cover">
+                class="aspect-[4/3] w-full" />
 
                 <article class="card absolute -bottom-0 left-4 right-4 border-2 border-[var(--navy)] sm:left-8 sm:right-8">
                     <div class="flex items-center justify-between gap-3">

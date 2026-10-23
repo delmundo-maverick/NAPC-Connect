@@ -14,7 +14,7 @@ return new class extends Migration
 
             $table->date('birthdate')->nullable();
 
-            // Same keys as config/ph_locations.php
+            // PSGC codes (see the psgc_regions, psgc_provinces and psgc_cities tables)
             $table->string('region', 20)->nullable();
             $table->string('province', 80)->nullable();
             $table->string('city', 100)->nullable();
