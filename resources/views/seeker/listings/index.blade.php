@@ -21,42 +21,38 @@
 
         <x-filter-tabs :options="$options" :current="$type" param="type" />
 
-        <form method="GET" action="{{ route('seeker.listings.index') }}" class="filter-bar">
+        <form method="GET" action="{{ route('seeker.listings.index') }}" class="space-y-4">
             @if ($type !== 'all')
                 <input type="hidden" name="type" value="{{ $type }}">
             @endif
 
-            <div>
-                <label for="q" class="label">Search</label>
-                <input id="q" type="search" name="q" value="{{ $search }}" class="input"
-                    placeholder="Title or keyword">
+            <div class="browse-filter">
+                <div>
+                    <label for="q" class="label">Search</label>
+                    <input id="q" type="search" name="q" value="{{ $search }}" class="input"
+                        placeholder="Title or keyword">
+                </div>
+
+                <div>
+                    <label for="sort" class="label">Sort by</label>
+                    <select id="sort" name="sort" class="input">
+                        <option value="latest" @selected($sort === 'latest')>Newest</option>
+                        <option value="deadline" @selected($sort === 'deadline')>Deadline soonest</option>
+                    </select>
+                </div>
+
+                <div class="flex gap-2">
+                    <button type="submit" class="btn-primary">Search</button>
+                    @if ($hasFilters)
+                        <a href="{{ route('seeker.listings.index', $type !== 'all' ? ['type' => $type] : []) }}"
+                            class="btn-ghost border-2 border-[var(--navy)]">Clear</a>
+                    @endif
+                </div>
             </div>
 
-            <div>
-                <label for="region" class="label">Location</label>
-                <select id="region" name="region" class="input">
-                    <option value="">Anywhere in the Philippines</option>
-                    @foreach ($regions as $code => $name)
-                        <option value="{{ $code }}" @selected($region === $code)>{{ $name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div>
-                <label for="sort" class="label">Sort by</label>
-                <select id="sort" name="sort" class="input">
-                    <option value="latest" @selected($sort === 'latest')>Newest</option>
-                    <option value="deadline" @selected($sort === 'deadline')>Deadline soonest</option>
-                </select>
-            </div>
-
-            <div class="flex gap-2">
-                <button type="submit" class="btn-primary">Search</button>
-                @if ($hasFilters)
-                    <a href="{{ route('seeker.listings.index', $type !== 'all' ? ['type' => $type] : []) }}"
-                        class="btn-ghost border-2 border-[var(--navy)]">Clear</a>
-                @endif
-            </div>
+            <x-location-picker :region="$region" :province="$province" :city="$city" :columns="3" region-label="Region"
+                region-placeholder="Anywhere in the Philippines" province-placeholder="Any province"
+                city-label="City or municipality" city-placeholder="Any city or municipality" />
         </form>
 
         <p class="muted font-semibold">
@@ -64,8 +60,8 @@
             @if ($search !== '')
                 for “{{ $search }}”
             @endif
-            @if ($region !== '')
-                in {{ $regions[$region] }} and nationwide
+            @if ($area)
+                for {{ $area }} (including nationwide and wider-area listings)
             @endif
         </p>
 

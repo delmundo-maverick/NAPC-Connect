@@ -16,3 +16,17 @@
     white-space: pre-line;
     overflow-wrap: anywhere;
 }
+
+/* Search, sort and buttons on one row. The location picker sits below it. */
+.browse-filter {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: end;
+}
+
+@media (min-width: 768px) {
+    .browse-filter {
+        grid-template-columns: 2fr 1fr auto;
+    }
+}
