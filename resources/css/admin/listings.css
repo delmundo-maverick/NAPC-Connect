@@ -1,0 +1,29 @@
+.badge-removed {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background: #fee2e2;
+    color: #991b1b;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.mod-details>summary {
+    cursor: pointer;
+    font-weight: 800;
+    color: var(--navy);
+    list-style: none;
+}
+
+.mod-details>summary::-webkit-details-marker {
+    display: none;
+}
+
+.mod-details>summary::after {
+    content: ' +';
+}
+
+.mod-details[open]>summary::after {
+    content: ' −';
+}

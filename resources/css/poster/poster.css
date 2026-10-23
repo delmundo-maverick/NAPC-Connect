@@ -1,0 +1,183 @@
+/* Styles used only by the organization (poster) pages.
+   Plain CSS on purpose: no @apply, so it works whether it is imported by app.css or built alone. */
+
+@layer components {
+
+    /* Listing type picker (step 1) */
+    .type-card {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 4rem;
+        padding: .75rem 1rem;
+        border: 2px solid var(--navy);
+        border-radius: .75rem;
+        background: #fff;
+        color: var(--navy);
+        font-weight: 800;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .type-card:focus-within {
+        outline: 3px solid var(--sky);
+        outline-offset: 2px;
+    }
+
+    .type-card-on.type-card-ayuda {
+        background: var(--coral);
+        border-color: var(--coral);
+        color: #fff;
+    }
+
+    .type-card-on.type-card-scholarship {
+        background: var(--sky);
+        border-color: var(--sky);
+        color: #fff;
+    }
+
+    .type-card-on.type-card-job {
+        background: var(--sun);
+        border-color: var(--sun);
+        color: var(--navy);
+    }
+
+    .type-card-on.type-card-training {
+        background: var(--leaf);
+        border-color: var(--leaf);
+        color: #fff;
+    }
+
+    /* How-to-apply picker (step 4) */
+    .mode-card {
+        display: block;
+        padding: 1rem;
+        border: 2px solid var(--navy);
+        border-radius: .75rem;
+        background: #fff;
+        color: var(--navy);
+        cursor: pointer;
+    }
+
+    .mode-card:focus-within {
+        outline: 3px solid var(--sky);
+        outline-offset: 2px;
+    }
+
+    .mode-card-on {
+        background: var(--navy);
+        color: #fff;
+    }
+
+    /* Checkbox choices */
+    .check-pill {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        padding: .6rem .8rem;
+        border: 2px solid var(--navy);
+        border-radius: .75rem;
+        background: #fff;
+        color: var(--navy);
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .check-pill:has(input:checked) {
+        background: var(--navy);
+        color: #fff;
+    }
+
+    .check-pill:focus-within {
+        outline: 3px solid var(--sky);
+        outline-offset: 2px;
+    }
+
+    .check-input {
+        width: 1.1rem;
+        height: 1.1rem;
+        accent-color: var(--sun);
+        flex-shrink: 0;
+    }
+
+    /* Tag input (courses) */
+    .tag-box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+        padding: .5rem;
+        border: 2px solid var(--navy);
+        border-radius: .5rem;
+        background: #fff;
+        cursor: text;
+    }
+
+    .tag-box:focus-within {
+        outline: 3px solid var(--sky);
+        outline-offset: 2px;
+    }
+
+    .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .25rem .5rem .25rem .75rem;
+        border-radius: .5rem;
+        background: var(--mist);
+        color: var(--navy);
+        font-size: .875rem;
+        font-weight: 700;
+    }
+
+    .tag button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 9999px;
+        font-size: 1rem;
+        line-height: 1;
+    }
+
+    .tag button:hover {
+        background: var(--navy);
+        color: #fff;
+    }
+
+    .tag-field {
+        flex: 1;
+        min-width: 9rem;
+        padding: .35rem;
+        border: 0;
+        background: transparent;
+        font: inherit;
+    }
+
+    .tag-field:focus-visible {
+        outline: none;
+    }
+
+    /* Question builder */
+    .question-card {
+        padding: 1rem;
+        border: 2px solid var(--navy);
+        border-radius: 1rem;
+        background: var(--mist);
+    }
+
+    @media (min-width: 640px) {
+        .question-grid {
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 1rem;
+        }
+    }
+
+    /* Greyed-out small buttons (Up / Down at the ends of the list) */
+    .btn-ghost:disabled,
+    .btn-danger:disabled {
+        opacity: .4;
+        cursor: not-allowed;
+    }
+}

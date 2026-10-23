@@ -1,0 +1,18 @@
+.filter-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: end;
+}
+
+@media (min-width: 768px) {
+    .filter-bar {
+        grid-template-columns: 2fr 1.5fr 1fr auto;
+    }
+}
+
+/* Keeps line breaks the organization typed in descriptions and instructions */
+.text-block {
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}

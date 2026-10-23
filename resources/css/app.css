@@ -1,0 +1,480 @@
+@import 'tailwindcss';
+@import './poster/poster.css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ---------- Design tokens ---------- */
+:root {
+    --navy: #0F2A5C;
+    --sun: #FFC72C;
+    --paper: #FFFFFF;
+    --mist: #EEF3FA;
+    --leaf: #138A5B;
+    --coral: #E4572E;
+    --sky: #2F6FDE;
+    --ink: #1B2437;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+body {
+    font-family: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+    outline: 3px solid var(--sky);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .rise {
+        animation: rise .7s ease-out both;
+    }
+
+    .rise-2 {
+        animation-delay: .12s;
+    }
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* NOTE: Tailwind v4 cannot @apply another custom class (e.g. "@apply btn").
+   So shared styles use comma-separated selectors instead. */
+
+@layer components {
+
+    /* ---------- Layout ---------- */
+    .container-page {
+        @apply mx-auto max-w-6xl px-5;
+    }
+
+    .section {
+        @apply mx-auto max-w-6xl px-5 py-16;
+    }
+
+    .section-mist {
+        background: var(--mist);
+    }
+
+    .section-navy {
+        background: var(--navy);
+    }
+
+    /* ---------- Typography ---------- */
+    .h1 {
+        @apply text-4xl font-extrabold leading-[1.1] sm:text-5xl;
+        color: var(--navy);
+    }
+
+    .h2 {
+        @apply text-3xl font-extrabold sm:text-4xl;
+        color: var(--navy);
+    }
+
+    .h3 {
+        @apply text-xl font-extrabold;
+        color: var(--navy);
+    }
+
+    .lead {
+        @apply max-w-xl text-lg leading-relaxed;
+        color: rgb(27 36 55 / .8);
+    }
+
+    .muted {
+        @apply text-sm;
+        color: rgb(27 36 55 / .7);
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn,
+    .btn-primary,
+    .btn-accent,
+    .btn-ghost {
+        @apply inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-extrabold transition;
+    }
+
+    .btn-primary {
+        background: var(--navy);
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background: var(--sky);
+    }
+
+    .btn-accent {
+        background: var(--sun);
+        color: var(--navy);
+    }
+
+    .btn-accent:hover {
+        filter: brightness(.95);
+    }
+
+    .btn-ghost {
+        background: transparent;
+        color: var(--navy);
+    }
+
+    .btn-ghost:hover {
+        color: var(--sky);
+    }
+
+    /* ---------- Navigation ---------- */
+    .nav-link {
+        @apply text-[15px] font-semibold;
+    }
+
+    .nav-link:hover {
+        color: var(--sky);
+    }
+
+    /* ---------- Form controls ---------- */
+    .input {
+        @apply w-full rounded-lg border-2 bg-white px-4 py-3.5 text-base;
+        border-color: var(--navy);
+    }
+
+    .input::placeholder {
+        color: rgb(27 36 55 / .5);
+    }
+
+    .label {
+        @apply mb-1 block text-sm font-bold;
+        color: var(--navy);
+    }
+
+    /* ---------- Filter chips ---------- */
+    .chip,
+    .chip-active {
+        @apply rounded-full border-2 px-4 py-1.5 text-sm font-bold;
+        border-color: var(--navy);
+        background: #fff;
+        color: var(--navy);
+    }
+
+    .chip-active {
+        background: var(--navy);
+        color: #fff;
+    }
+
+    .chip-soft {
+        @apply rounded-md bg-white px-3 py-1.5 text-sm font-semibold;
+    }
+
+    .chip-soft:hover {
+        background: var(--sun);
+    }
+
+    /* ---------- Badges ---------- */
+    .badge,
+    .badge-ayuda,
+    .badge-scholarship,
+    .badge-job,
+    .badge-training,
+    .badge-verified {
+        @apply inline-block rounded-md px-2.5 py-1 text-xs font-bold text-white;
+    }
+
+    .badge-ayuda {
+        background: var(--coral);
+    }
+
+    .badge-scholarship {
+        background: var(--sky);
+    }
+
+    .badge-job {
+        background: var(--sun);
+        color: var(--navy);
+    }
+
+    .badge-training {
+        background: var(--leaf);
+    }
+
+    .badge-verified {
+        background: var(--leaf);
+    }
+
+    /* ---------- Cards ---------- */
+    .card {
+        @apply rounded-xl bg-white p-4;
+    }
+
+    .card-lg {
+        @apply rounded-2xl bg-white p-6;
+    }
+
+    .cat-card {
+        @apply flex min-h-[220px] flex-col justify-between rounded-2xl p-6 text-white;
+    }
+
+    .cat-card:hover {
+        filter: brightness(.95);
+    }
+
+    .cat-ayuda {
+        background: var(--coral);
+    }
+
+    .cat-scholarship {
+        background: var(--sky);
+    }
+
+    .cat-job {
+        background: var(--sun);
+        color: var(--navy);
+    }
+
+    .cat-training {
+        background: var(--leaf);
+    }
+
+    .step-dot {
+        @apply flex h-10 w-10 items-center justify-center rounded-full text-lg font-extrabold text-white;
+        background: var(--navy);
+    }
+
+    .deadline-soon {
+        @apply text-xs font-bold;
+        color: var(--coral);
+    }
+
+    .match-reason {
+        @apply text-sm font-semibold;
+        color: var(--leaf);
+    }
+
+    /* ---------- Image placeholders ---------- */
+    .img-placeholder {
+        @apply flex flex-col items-center justify-center rounded-2xl;
+        background: #D9E3F3;
+        color: rgb(15 42 92 / .6);
+    }
+
+    .img-placeholder-on-color {
+        background: rgb(255 255 255 / .25);
+        color: inherit;
+    }
+}
+
+/* PASTE AT THE BOTTOM of resources/css/app.css (after the existing @layer components block) */
+
+@layer components {
+
+    /* Buttons */
+    .btn-danger {
+        @apply inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-extrabold text-white transition;
+        background: var(--coral);
+    }
+
+    .btn-danger:hover {
+        filter: brightness(.92);
+    }
+
+    .btn-sm {
+        @apply px-4 py-2 text-sm;
+    }
+
+    .btn-primary:disabled,
+    .btn-accent:disabled {
+        @apply cursor-not-allowed opacity-50;
+    }
+
+    .btn-primary:disabled:hover {
+        background: var(--navy);
+    }
+
+    /* Navbar */
+    .brand {
+        @apply flex items-center gap-2 text-2xl font-extrabold;
+        color: var(--navy);
+    }
+
+    .nav-link-active {
+        text-decoration: underline;
+        text-decoration-thickness: 3px;
+        text-decoration-color: var(--sun);
+        text-underline-offset: 8px;
+    }
+
+    .avatar {
+        @apply flex h-9 w-9 items-center justify-center rounded-full text-base font-extrabold;
+        background: var(--sun);
+        color: var(--navy);
+    }
+
+    .nav-panel {
+        @apply absolute right-0 z-20 mt-2 w-64 rounded-xl border-2 bg-white p-2;
+        border-color: var(--navy);
+    }
+
+    .menu-item {
+        @apply block w-full rounded-lg px-3 py-2 text-left text-[15px] font-semibold;
+        color: var(--ink);
+    }
+
+    .menu-item:hover {
+        background: var(--mist);
+    }
+
+    /* Alerts */
+    .alert,
+    .alert-success,
+    .alert-warning,
+    .alert-danger {
+        @apply rounded-lg border-2 px-4 py-3 text-[15px] font-semibold;
+    }
+
+    .alert-success {
+        background: rgb(19 138 91 / .1);
+        border-color: var(--leaf);
+        color: #0B5A3B;
+    }
+
+    .alert-warning {
+        background: rgb(255 199 44 / .25);
+        border-color: var(--sun);
+        color: var(--navy);
+    }
+
+    .alert-danger {
+        background: rgb(228 87 46 / .1);
+        border-color: var(--coral);
+        color: #9A2F10;
+    }
+
+    /* Status and role badges */
+    .badge-role,
+    .badge-pending,
+    .badge-approved,
+    .badge-rejected {
+        @apply inline-block rounded-md px-2.5 py-1 text-xs font-bold text-white;
+    }
+
+    .badge-role {
+        background: var(--navy);
+    }
+
+    .badge-pending {
+        background: var(--sun);
+        color: var(--navy);
+    }
+
+    .badge-approved {
+        background: var(--leaf);
+    }
+
+    .badge-rejected {
+        background: var(--coral);
+    }
+
+    /* Dashboard pieces */
+    .stat-card {
+        @apply rounded-2xl p-5;
+        background: var(--mist);
+    }
+
+    .stat-value {
+        @apply text-4xl font-extrabold;
+        color: var(--navy);
+    }
+
+    .stat-label {
+        @apply mt-1 text-sm font-bold;
+        color: rgb(27 36 55 / .7);
+    }
+
+    .detail-list {
+        @apply grid gap-x-6 gap-y-3 sm:grid-cols-2;
+    }
+
+    .detail-list dt {
+        @apply text-xs font-bold uppercase tracking-wide;
+        color: rgb(27 36 55 / .6);
+    }
+
+    .detail-list dd {
+        @apply mt-0.5 break-words text-base font-semibold;
+        color: var(--navy);
+    }
+}
+
+/* PASTE AT THE BOTTOM of resources/css/app.css (inside or after the @layer components block) */
+
+@layer components {
+
+    /* Admin sub-navigation (tabs under the page header) */
+    .subnav {
+        @apply flex gap-2 overflow-x-auto py-3;
+    }
+
+    .subnav-link,
+    .subnav-link-active {
+        @apply whitespace-nowrap rounded-lg px-4 py-2 text-[15px] font-bold;
+        color: var(--navy);
+    }
+
+    .subnav-link:hover {
+        background: var(--mist);
+    }
+
+    .subnav-link-active {
+        background: var(--navy);
+        color: #fff;
+    }
+
+    /* Clickable stat cards */
+    .stat-card-link {
+        @apply block;
+    }
+
+    .stat-card-link:hover {
+        background: #DDE7F6;
+    }
+
+    /* Simple list with rows (users) */
+    .list-card {
+        @apply rounded-2xl border-2 bg-white px-5;
+        border-color: var(--navy);
+    }
+
+    .list-row {
+        @apply flex flex-wrap items-center gap-x-4 gap-y-2 py-4;
+    }
+
+    .list-row+.list-row {
+        border-top: 2px solid var(--mist);
+    }
+
+    /* Quiet badge for seekers */
+    .badge-muted {
+        @apply inline-block rounded-md px-2.5 py-1 text-xs font-bold;
+        background: var(--mist);
+        color: var(--navy);
+    }
+}
