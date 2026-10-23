@@ -16,3 +16,51 @@
     white-space: pre-line;
     overflow-wrap: anywhere;
 }
+
+/* Search and sort on one row. The location picker sits below it, then the buttons. */
+.browse-filter {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .browse-filter {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+/* Search box with an icon and a gap before the text */
+.search-field {
+    position: relative;
+}
+
+.search-field .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    width: 1.25rem;
+    height: 1.25rem;
+    transform: translateY(-50%);
+    color: var(--navy);
+    pointer-events: none;
+}
+
+.search-field .input {
+    padding-left: 3rem;
+    background-image: none;
+}
+
+/* Search and Clear buttons at the bottom of the filter section */
+.filter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+    .filter-actions {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+}
